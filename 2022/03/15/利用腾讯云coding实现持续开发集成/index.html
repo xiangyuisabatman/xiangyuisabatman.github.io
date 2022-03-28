@@ -463,6 +463,9 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
 
@@ -507,7 +510,30 @@
 <li><p>填写完名称、用户名、密码之后，我们可以在下方持续集成中，选择授权计划和项目。完成之后重新回到流程配置-文本编辑器中。</p>
 </li>
 <li><p>创建一个部署的stage</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">stage(<span class="string">&#x27;部署&#x27;</span>) &#123;</span><br><span class="line">  steps &#123;</span><br><span class="line">    echo <span class="string">&#x27;部署中...&#x27;</span></span><br><span class="line">    script &#123;</span><br><span class="line">      def remote = [:]</span><br><span class="line">      remote.name = <span class="string">&#x27;web-server&#x27;</span></span><br><span class="line">      remote.allowAnyHosts = true</span><br><span class="line">      remote.host = <span class="string">&#x27;服务器ip地址&#x27;</span></span><br><span class="line">      remote.port = 端口号</span><br><span class="line">      remote.<span class="keyword">user</span> = <span class="string">&#x27;用户身份&#x27;</span></span><br><span class="line">       // 把「CODING 凭据管理」中的「凭据 ID」填入 credentialsId，而 id_rsa 无需修改</span><br><span class="line">      withCredentials([usernamePassword(credentialsId: <span class="string">&quot;credentialsId&quot;</span>, usernameVariable: <span class="string">&#x27;username&#x27;</span>, passwordVariable: <span class="string">&#x27;password&#x27;</span>)]) &#123;</span><br><span class="line">        remote.<span class="keyword">user</span> = username</span><br><span class="line">        remote.password = password</span><br><span class="line">        </span><br><span class="line">        // SSH 上传文件到远端服务器</span><br><span class="line">        sshPut remote: remote, <span class="keyword">from</span>: <span class="string">&#x27;../release.tgz&#x27;</span>, into: <span class="string">&#x27;/tmp/&#x27;</span></span><br><span class="line">        // 解压缩到指定文件夹</span><br><span class="line">        sshCommand remote: remote, command: <span class="string">&quot;tar -zxf /tmp/release.tgz -C ~/egg-server/&quot;</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    echo <span class="string">&#x27;部署完成&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<pre class="line-numbers language-dockerfile" data-language="dockerfile"><code class="language-dockerfile">stage(&#39;部署&#39;) &#123;
+  steps &#123;
+    echo &#39;部署中...&#39;
+    script &#123;
+      def remote &#x3D; [:]
+      remote.name &#x3D; &#39;web-server&#39;
+      remote.allowAnyHosts &#x3D; true
+      remote.host &#x3D; &#39;服务器ip地址&#39;
+      remote.port &#x3D; 端口号
+      remote.user &#x3D; &#39;用户身份&#39;
+       &#x2F;&#x2F; 把「CODING 凭据管理」中的「凭据 ID」填入 credentialsId，而 id_rsa 无需修改
+      withCredentials([usernamePassword(credentialsId: &quot;credentialsId&quot;, usernameVariable: &#39;username&#39;, passwordVariable: &#39;password&#39;)]) &#123;
+        remote.user &#x3D; username
+        remote.password &#x3D; password
+        
+        &#x2F;&#x2F; SSH 上传文件到远端服务器
+        sshPut remote: remote, from: &#39;..&#x2F;release.tgz&#39;, into: &#39;&#x2F;tmp&#x2F;&#39;
+        &#x2F;&#x2F; 解压缩到指定文件夹
+        sshCommand remote: remote, command: &quot;tar -zxf &#x2F;tmp&#x2F;release.tgz -C ~&#x2F;egg-server&#x2F;&quot;
+      &#125;
+    &#125;
+    echo &#39;部署完成&#39;
+  &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
 <li><p>到这里就可以进行基本的构建部署了。</p>
 </li>
 </ul>
