@@ -549,19 +549,30 @@ columns <span class="token operator">=</span> <span class="token punctuation">[<
   <span class="token comment">// 当前行,数据已当前行为基准</span>
   <span class="token keyword">const</span> current <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
     <span class="token literal-property property">row</span><span class="token operator">:</span> direction <span class="token operator">===</span> <span class="token string">"down"</span> <span class="token operator">?</span> start<span class="token punctuation">.</span>from<span class="token punctuation">.</span>row <span class="token operator">:</span> start<span class="token punctuation">.</span>from<span class="token punctuation">.</span>row<span class="token punctuation">,</span>
-    <span class="token literal-property property">col</span><span class="token operator">:</span> start<span class="token punctuation">.</span>highlight<span class="token punctuation">.</span>col<span class="token punctuation">,</span>
+    <span class="token literal-property property">col</span><span class="token operator">:</span>
+      direction <span class="token operator">===</span> <span class="token string">"down"</span>
+        <span class="token operator">?</span> <span class="token function">startToEndCol</span><span class="token punctuation">(</span>start<span class="token punctuation">.</span>from<span class="token punctuation">.</span>col<span class="token punctuation">,</span> end<span class="token punctuation">.</span>to<span class="token punctuation">.</span>col<span class="token punctuation">)</span>
+        <span class="token operator">:</span> <span class="token function">startToEndCol</span><span class="token punctuation">(</span>end<span class="token punctuation">.</span>from<span class="token punctuation">.</span>col<span class="token punctuation">,</span> start<span class="token punctuation">.</span>to<span class="token punctuation">.</span>col<span class="token punctuation">)</span><span class="token punctuation">,</span>
   <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
-  <span class="token comment">// 当前列的key值</span>
-  <span class="token keyword">let</span> key <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>hot<span class="token punctuation">.</span><span class="token function">colToProp</span><span class="token punctuation">(</span>current<span class="token punctuation">.</span>col<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// 开始的行号</span>
+  <span class="token keyword">function</span> <span class="token function">startToEndCol</span><span class="token punctuation">(</span><span class="token parameter">start<span class="token punctuation">,</span> end</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">let</span> arr <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> start<span class="token punctuation">;</span> i <span class="token operator">&lt;=</span> end<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      arr<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">return</span> arr<span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token comment">// 当前选中列的key值,数组,可能为多列</span>
+  <span class="token keyword">let</span> key <span class="token operator">=</span> current<span class="token punctuation">.</span>col<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">i</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token keyword">this</span><span class="token punctuation">.</span>hot<span class="token punctuation">.</span><span class="token function">colToProp</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">const</span> startIndex <span class="token operator">=</span> direction <span class="token operator">===</span> <span class="token string">"down"</span> <span class="token operator">?</span> start<span class="token punctuation">.</span>from<span class="token punctuation">.</span>row <span class="token operator">:</span> end<span class="token punctuation">.</span>from<span class="token punctuation">.</span>row<span class="token punctuation">;</span>
-  <span class="token comment">// 结束的行号</span>
   <span class="token keyword">const</span> endIndex <span class="token operator">=</span> direction <span class="token operator">===</span> <span class="token string">"down"</span> <span class="token operator">?</span> end<span class="token punctuation">.</span>to<span class="token punctuation">.</span>row <span class="token operator">:</span> start<span class="token punctuation">.</span>to<span class="token punctuation">.</span>row<span class="token punctuation">;</span>
   <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> startIndex<span class="token punctuation">;</span> i <span class="token operator">&lt;=</span> endIndex<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
     <span class="token comment">// 可自行进行 表格数据的赋值</span>
+    key<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">keyItem</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+      
+    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
   <span class="token punctuation">&#125;</span>
 <span class="token punctuation">&#125;</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h3 id="表格全局排序"><a href="#表格全局排序" class="headerlink" title="表格全局排序"></a>表格全局排序</h3><p>需求：表格有分页，在点击表头进行排序时，希望进行所有数据的排序，并且在切换分页时保留排序规则。表格本身自带排序规则，但是在切换页时不保留排序规则。</p>
 <pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token keyword">new</span> <span class="token class-name">Handsontable</span><span class="token punctuation">(</span>dom<span class="token punctuation">,</span> <span class="token punctuation">&#123;</span>
@@ -705,18 +716,17 @@ columns <span class="token operator">=</span> <span class="token punctuation">[<
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/06/09/handsontable%E8%87%AA%E5%AE%9A%E4%B9%89%E9%9C%80%E6%B1%82%E8%AE%B0%E5%BD%95/">
+                <a href="/2022/12/02/%E5%85%B3%E4%BA%8EwithCredentials/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="handsontable自定义需求记录">
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="">
                         
-                        <span class="card-title">handsontable自定义需求记录</span>
+                        <span class="card-title"></span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -726,9 +736,9 @@ columns <span class="token operator">=</span> <span class="token punctuation">[<
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-06-09
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-12-02
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -736,15 +746,6 @@ columns <span class="token operator">=</span> <span class="token punctuation">[<
                             
                         </span>
                     </div>
-                </div>
-
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/handsontable/">
-                        <span class="chip bg-color">handsontable</span>
-                    </a>
-                    
                 </div>
                 
             </div>
@@ -983,7 +984,7 @@ columns <span class="token operator">=</span> <span class="token punctuation">[<
         <div class="col s12 m8 l8 copy-right">
             Copyright&nbsp;&copy;
             
-                <span id="year">2019-2022</span>
+                <span id="year">2019-2024</span>
             
             <a href="/about" target="_blank">Xiangyu Du</a>
             |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>

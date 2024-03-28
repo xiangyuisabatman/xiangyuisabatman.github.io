@@ -476,6 +476,37 @@
 <h4 id="执行npm-run-ci报错"><a href="#执行npm-run-ci报错" class="headerlink" title="执行npm run ci报错"></a>执行npm run ci报错</h4><p><img src="1.png" alt="1"></p>
 <p><em><strong>因为在model目录创建了二级目录，在二级目录中定义的model。直接在一级目录model下直接生成model，不会存在问题。</strong></em></p>
 <p><em><strong>上述问题，如果修改后，重新构建代码发布到服务器执行<code>npm run ci</code>可能还会报错，这时候只需要服务器上原目录内的所有内容再重新上传即可。</strong></em></p>
+<h4 id="关于mongodb-‘-in’-查询无序问题"><a href="#关于mongodb-‘-in’-查询无序问题" class="headerlink" title="关于mongodb ‘$in’ 查询无序问题"></a>关于mongodb ‘$in’ 查询无序问题</h4><p>在做批量查询详情的时候,使用$in查询包含数组的结果,发现结果的顺序与查询id数组的参数顺序不一致.</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token comment">/**
+  * @description: 查询详情
+  * @param &#123;string[]&#125; ids
+  * @return &#123;type&#125;
+  */</span>
+<span class="token keyword">public</span> <span class="token keyword">async</span> <span class="token function">info</span><span class="token punctuation">(</span><span class="token parameter"><span class="token literal-property property">ids</span><span class="token operator">:</span> string<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">|</span> string</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">const</span> _ids <span class="token operator">=</span> Array<span class="token punctuation">.</span><span class="token function">isArray</span><span class="token punctuation">(</span>ids<span class="token punctuation">)</span> <span class="token operator">?</span> ids <span class="token operator">:</span> <span class="token punctuation">[</span>ids<span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> data <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token keyword">this</span><span class="token punctuation">.</span>ctx<span class="token punctuation">.</span>model<span class="token punctuation">.</span>SubjectItem<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>
+    <span class="token punctuation">&#123;</span>
+      <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span> $<span class="token keyword">in</span><span class="token operator">:</span> _ids <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">status</span><span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token string">"title"</span><span class="token punctuation">,</span> <span class="token string">"desc"</span><span class="token punctuation">,</span> <span class="token string">"mdJson"</span><span class="token punctuation">,</span> <span class="token string">"typeKey"</span><span class="token punctuation">]</span>
+  <span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">populate</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span> <span class="token literal-property property">path</span><span class="token operator">:</span> <span class="token string">"subjectTypeId"</span><span class="token punctuation">,</span> <span class="token literal-property property">select</span><span class="token operator">:</span> <span class="token string">"title"</span> <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  data <span class="token operator">=</span> data<span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> _ids<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span>a<span class="token punctuation">.</span>_id<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">-</span> _ids<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span>b<span class="token punctuation">.</span>_id<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 这里做一个根据ids排序的方法.</span>
+  <span class="token keyword">return</span> data<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+
+
+
+
+
+
+
+
 
                 
             </div>
@@ -865,7 +896,7 @@
         <div class="col s12 m8 l8 copy-right">
             Copyright&nbsp;&copy;
             
-                <span id="year">2019-2022</span>
+                <span id="year">2019-2024</span>
             
             <a href="/about" target="_blank">Xiangyu Du</a>
             |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
